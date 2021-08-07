@@ -1,0 +1,17 @@
+/* //Backgrounds */
+:root {
+  --bodybg: #222;
+}
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bodybg);
+}
+.chart-bg {
+  fill: var(--bodybg);
+}
