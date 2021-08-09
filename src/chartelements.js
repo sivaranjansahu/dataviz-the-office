@@ -3,6 +3,10 @@ import { chartDimensions, margins, dimensions } from "./utils/dimensions";
 import { nest } from "d3-collection";
 import RadialLine from "./radialline";
 import CharacterLine from "./characterLine";
+import RadialBars from "./radialbars";
+import Viewership from "./viwership";
+import MedianRating from "./medianrating";
+
 class ChartElements {
   constructor(chartEl, metaData, characterData) {
     this.svg = chartEl;
@@ -11,11 +15,13 @@ class ChartElements {
     this._drawCircles = this._drawCircles.bind(this);
     this._drawCircles();
     //this._drawRadialLine();
+
+    console.log(this._seasonMedianRating(this.data));
+
     this._rad();
   }
 
   _rad() {
-    console.log(this.characterData);
     const rad1 = new RadialLine(this.svg, this.data, { classes: "first-line" });
     const mikeData = this._characterTotalLinesByEpisode(
       this.characterData[0].values
@@ -23,7 +29,6 @@ class ChartElements {
     const hollyData = this._characterTotalLinesByEpisode(
       this.characterData[17].values
     );
-    console.log(hollyData);
     const michael = new CharacterLine(this.svg, mikeData, {
       classes: "first-line",
     });
@@ -37,6 +42,12 @@ class ChartElements {
         classes: "third-line",
       }
     );
+
+    const radialBars = new RadialBars(this.svg, this.data, {});
+    const viewershipArea = new Viewership(this.svg, this.data, {});
+    const medianRatingsLine = new MedianRating(this.svg, this.data, {
+      classes: "median-rating",
+    });
   }
   _createXscale() {}
 
@@ -122,6 +133,18 @@ class ChartElements {
         return leaves.length;
       })
       .entries(speakerData);
+  }
+
+  _seasonMedianRating(metadata) {
+    return nest()
+      .key(function (d) {
+        return d.Season;
+      })
+
+      .rollup(function (leaves) {
+        return d3.median(leaves, (d) => parseFloat(d.Ratings));
+      })
+      .entries(metadata);
   }
 }
 

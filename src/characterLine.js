@@ -16,7 +16,6 @@ class CharacterLine {
     this._drawLine = this._drawLine.bind(this);
 
     this.newData = this._padData(this.data);
-    console.log(this.newData);
 
     this._createScales();
     this._drawLine();

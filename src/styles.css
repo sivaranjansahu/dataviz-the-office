@@ -7,6 +7,7 @@ body {
   margin: 0;
   display: flex;
   justify-content: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   align-items: center;
   /* height: 100vh;
   width: 100vw; */
@@ -27,4 +28,24 @@ body {
 .third-line {
   stroke: rgb(211, 15, 162);
   stroke-width: 2;
+}
+.median-rating-line path {
+  stroke: rgb(211, 15, 162);
+  stroke-width: 2;
+}
+.rayline {
+  stroke: rgb(83, 83, 83);
+  stroke-width: 0.5;
+  stroke-opacity: 0.3;
+}
+
+#chart {
+  transform: rotate(4.5deg);
+}
+.titlelabel {
+  fill: #eaeaea;
+  opacity: 0.4;
+}
+.titlelabel:hover {
+  opacity: 1;
 }

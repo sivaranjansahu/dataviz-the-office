@@ -15,9 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
       let groupedByChar = _groupByChar(episodes, "speaker");
       const characterData = groupedByChar.slice(0, 30);
 
-      console.log(groupedByChar[0].values);
       const groupedByEpisode = _groupByEpisode(groupedByChar[0].values);
-      console.log(groupedByEpisode);
       const chart = new CharteElements(svg, metaData, characterData);
     })
     .catch((e) => {
