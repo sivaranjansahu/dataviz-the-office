@@ -6,6 +6,8 @@ import radialAxis, { axisRadialInner, axisRadialOuter } from "d3-radial-axis";
 class CharacterLine {
   constructor(chartEl, data, options) {
     this.classes = options.classes || "";
+    this.offset = options.offset || 0;
+    this.color = options.color || "red";
     this.svg = chartEl;
     this.linegroup;
     this.data = data;
@@ -17,7 +19,7 @@ class CharacterLine {
 
     this.newData = this._padData(this.data);
 
-    this._createScales();
+    this._createScales(this.offset);
     this._drawLine();
 
     return this.linegroup;
@@ -59,23 +61,26 @@ class CharacterLine {
         return this.scaleX(parseInt(d.key));
       })
       .radius((d) => {
-        return this.scaleY(d.value);
+        //return this.scaleY(d.value);
+        return this.scaleY(0);
       })
+
       .curve(d3.curveBasis);
 
     var linePlot = linegroup
       .append("path")
       .datum(this.newData)
       .attr("fill", "none")
+      .attr("stroke", this.color)
       .attr("class", this.classes)
       .attr("d", line);
 
     this.linegroup = linegroup;
   }
 
-  _createScales() {
-    var innerRadius = 300,
-      outerRadius = 400;
+  _createScales(offset) {
+    var innerRadius = 200 + offset,
+      outerRadius = innerRadius + 100;
     var fullCircle = 1.9 * Math.PI;
 
     this.scaleX = d3.scaleTime().range([0, fullCircle]);

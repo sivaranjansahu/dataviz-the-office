@@ -2,9 +2,11 @@ import * as d3 from "d3";
 import { chartDimensions, margins, dimensions } from "./utils/dimensions";
 import { createXScales, createViewershipYScales } from "./scales";
 class ViewershipAreaChart {
-  constructor(chartEl, data, options) {
+  constructor(chartEl, data, mikeData, options) {
     this.scaleX = createXScales([0, 187]);
     this.scaleY = createViewershipYScales([0, 25]);
+    this.spkrScaleY = createViewershipYScales([0, 25]);
+    this.mikeData = mikeData;
     this.svg = chartEl;
     this.data = data;
 

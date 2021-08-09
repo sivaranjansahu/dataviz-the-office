@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-const innerRadius = 600,
-  outerRadius = 700;
+const innerRadius = 800,
+  outerRadius = 900;
 const fullCircle = 1.9 * Math.PI;
 
 export function createXScales(xExtent) {
@@ -10,8 +10,6 @@ export function createXScales(xExtent) {
 }
 
 export function createYScales(yExtent) {
-  var innerRadius = 700,
-    outerRadius = 800;
   var fullCircle = 1.9 * Math.PI;
   const scaleY = d3.scaleRadial().range([innerRadius, outerRadius]);
 

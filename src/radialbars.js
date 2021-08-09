@@ -60,8 +60,8 @@ class RadialBars {
   }
 
   _drawChart() {
-    var innerRadius = 700,
-      outerRadius = 800;
+    var innerRadius = 800,
+      outerRadius = 850;
     const that = this;
     this.radialBarsGroup = this.svg
       .append("g")
@@ -108,7 +108,7 @@ class RadialBars {
           .padRadius(innerRadius)
       );
 
-    this.radialBarsGroup
+    const titlesGroup = this.radialBarsGroup
       .append("g")
       .selectAll("g")
       .data(this.data)
@@ -125,9 +125,11 @@ class RadialBars {
           "rotate(" +
           ((that.scaleX(d.absEpisode) * 180) / Math.PI - 90) +
           ")" +
-          "translate(450,0)"
+          "translate(600,0)"
         );
-      })
+      });
+
+    const titleTexts = titlesGroup
       .append("text")
       .text(function (d) {
         return d.EpisodeTitle;
@@ -139,6 +141,23 @@ class RadialBars {
       })
       .style("font-size", "10px")
       .attr("alignment-baseline", "middle");
+    console.log(titleTexts);
+    titlesGroup
+      .selectAll(".titlelabel text")
+      .on("mouseover", (e, d) => {
+        document.querySelector("#axisline-" + d.absEpisode).style.stroke =
+          "red";
+        document.querySelector("#axisline-" + d.absEpisode).style[
+          "stroke-opacity"
+        ] = 1;
+      })
+      .on("mouseout", (e, d) => {
+        document.querySelector("#axisline-" + d.absEpisode).style.stroke =
+          "#535353";
+        document.querySelector("#axisline-" + d.absEpisode).style[
+          "stroke-opacity"
+        ] = 0.5;
+      });
   }
 }
 

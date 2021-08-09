@@ -12,7 +12,7 @@ class RadialAxes {
     this.pieData = this._groupBySeason(data);
     this._createAxes();
     this._createSeasonPie();
-    this._createRayLines(data);
+    //this._createRayLines(data);
   }
 
   _createAxes() {
@@ -36,7 +36,7 @@ class RadialAxes {
       .append("g")
       .classed("axis", true)
       .call(
-        axisRadialInner(this.scaleX, 700)
+        axisRadialInner(this.scaleX, 900)
           .ticks(ticksAmount)
           .tickFormat(d3.format("d"))
           .tickValues(d3.range(0, 186 + step, step))
@@ -59,7 +59,7 @@ class RadialAxes {
       .pie()
       .startAngle(0)
       .padAngle(0.01)
-      .endAngle(Math.PI * 1.9)
+      .endAngle(Math.PI * 1.915)
       .value(function (d) {
         return d.value;
       })
@@ -85,7 +85,7 @@ class RadialAxes {
         "#eaeaea",
       ]);
 
-    var arcBorder = d3.arc().innerRadius(400).outerRadius(420);
+    var arcBorder = d3.arc().innerRadius(540).outerRadius(570);
     const arcs = this.allAxisLinesGroup
       .selectAll("whatever")
       .data(data_ready)
@@ -93,7 +93,7 @@ class RadialAxes {
 
     arcs
       .append("path")
-      .attr("d", d3.arc().innerRadius(0).outerRadius(400))
+      .attr("d", d3.arc().innerRadius(200).outerRadius(540))
       .attr("fill", function (d) {
         return color(parseInt(d.data.key));
       })
@@ -104,6 +104,7 @@ class RadialAxes {
       .append("path")
       .attr("class", "arcborder")
       .attr("fill", "yellow")
+      .attr("fill-opacity", 0.6)
       .attr("id", function (d, i) {
         return "arcborder" + i;
       })
@@ -135,7 +136,9 @@ class RadialAxes {
       .enter()
       .append("text")
       .attr("class", "donutText")
-      .attr("dy", 13)
+      .attr("font-weight", "bold")
+      .attr("dy", 20)
+      .style("fill", "#fafafa")
       .append("textPath")
       .attr("startOffset", "50%")
       .style("text-anchor", "middle")
@@ -155,6 +158,9 @@ class RadialAxes {
       .enter()
       .append("line")
       .attr("class", "rayline")
+      .attr("id", (d) => {
+        return "axisline-" + d.absEpisode;
+      })
       .attr("x1", 0)
       .attr("y1", 0)
       .attr("x2", (d) => {

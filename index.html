@@ -1,9 +1,29 @@
 <html>
   <head>
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="https://use.typekit.net/ypz8med.css" />
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
-    <div id="chart"></div>
+    <section class="container mx-auto pt-20">
+      <h1 class="mb-32 text-8xl">The Office</h1>
+      <div id="chart"></div>
+      <footer class="flex w-full flex-between mt-32">
+        <div class="flex-1">
+          <h2 class="text-3xl">Top Episodes</h2>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-3xl">Top Directors</h2>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-3xl">Top Writers</h2>
+        </div>
+      </footer>
+    </section>
     <script src="./src/index.js"></script>
   </body>
 </html>

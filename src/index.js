@@ -4,8 +4,6 @@ import CharteElements from "./chartelements";
 import { nest } from "d3-collection";
 
 window.addEventListener("DOMContentLoaded", () => {
-  const svg = new Chartbase("#chart");
-
   Promise.all([
     d3.csv(require("./data/officemeta.csv")),
     d3.csv(require("./data/episodes.csv")),
@@ -14,7 +12,7 @@ window.addEventListener("DOMContentLoaded", () => {
     .then(([metaData, episodes]) => {
       let groupedByChar = _groupByChar(episodes, "speaker");
       const characterData = groupedByChar.slice(0, 30);
-
+      const svg = new Chartbase("#chart", metaData);
       const groupedByEpisode = _groupByEpisode(groupedByChar[0].values);
       const chart = new CharteElements(svg, metaData, characterData);
     })

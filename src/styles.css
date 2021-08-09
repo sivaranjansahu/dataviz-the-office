@@ -5,7 +5,6 @@
 body {
   padding: 0;
   margin: 0;
-  display: flex;
   justify-content: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   align-items: center;
@@ -34,7 +33,7 @@ body {
   stroke-width: 2;
 }
 .rayline {
-  stroke: rgb(83, 83, 83);
+  stroke: #535353;
   stroke-width: 0.5;
   stroke-opacity: 0.3;
 }
@@ -48,4 +47,12 @@ body {
 }
 .titlelabel:hover {
   opacity: 1;
+}
+
+h1,
+h2 {
+  font-family: itc-american-typewriter, serif;
+  font-weight: 500;
+  font-style: normal;
+  color: #eaeaea;
 }

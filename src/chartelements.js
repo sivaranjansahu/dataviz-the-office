@@ -13,7 +13,7 @@ class ChartElements {
     this.data = metaData;
     this.characterData = characterData;
     this._drawCircles = this._drawCircles.bind(this);
-    this._drawCircles();
+    //this._drawCircles();
     //this._drawRadialLine();
 
     console.log(this._seasonMedianRating(this.data));
@@ -22,26 +22,28 @@ class ChartElements {
   }
 
   _rad() {
+    var color1 = d3
+      .scaleSequential()
+      .domain([0, 20])
+      .interpolator(d3.interpolateRdYlGn);
+    // .range(["#d73027", "#1a9850"])
+    // .interpolate(d3.interpolateHcl);
+
+    console.log(d3.interpolateRdGy(0.3));
     const rad1 = new RadialLine(this.svg, this.data, { classes: "first-line" });
-    const mikeData = this._characterTotalLinesByEpisode(
-      this.characterData[0].values
-    );
-    const hollyData = this._characterTotalLinesByEpisode(
-      this.characterData[17].values
-    );
-    const michael = new CharacterLine(this.svg, mikeData, {
-      classes: "first-line",
-    });
-    const holly = new CharacterLine(this.svg, hollyData, {
-      classes: "second-line",
-    });
-    const toby = new CharacterLine(
-      this.svg,
-      this._characterTotalLinesByEpisode(this.characterData[2].values),
-      {
-        classes: "third-line",
-      }
-    );
+    for (let i = 0; i < 20; i++) {
+      const data = this._characterTotalLinesByEpisode(
+        this.characterData[i].values
+      );
+      new CharacterLine(this.svg, data, {
+        classes: "",
+        offset: i * 15,
+        color: color1(i),
+      });
+    }
+    // const mikeData = this._characterTotalLinesByEpisode(
+    //   this.characterData[0].values
+    // );
 
     const radialBars = new RadialBars(this.svg, this.data, {});
     const viewershipArea = new Viewership(this.svg, this.data, {});
