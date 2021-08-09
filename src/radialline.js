@@ -1,5 +1,11 @@
 import * as d3 from "d3";
-import { chartDimensions, margins, dimensions } from "./utils/dimensions";
+import {
+  chartDimensions,
+  margins,
+  dimensions,
+  radii,
+  metalength,
+} from "./utils/dimensions";
 import { parseTime } from "./utils/parsers";
 import radialAxis, { axisRadialInner, axisRadialOuter } from "d3-radial-axis";
 import RadialAxes from "./radialaxes";
@@ -11,7 +17,7 @@ class RadialLine {
     this.svg = chartEl;
     this.linegroup;
     this.data = data;
-    this.scaleX = createXScales([0, 187]);
+    this.scaleX = createXScales([0, metalength]);
     this.scaleY = createYScales([6, 10]);
 
     this._drawLine = this._drawLine.bind(this);

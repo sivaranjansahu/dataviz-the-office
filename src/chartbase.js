@@ -1,12 +1,18 @@
 import * as d3 from "d3";
 import { createXScales, createYScales } from "./scales";
-import { chartDimensions, dimensions, margins } from "./utils/dimensions";
+import {
+  chartDimensions,
+  dimensions,
+  margins,
+  metalength,
+  radii,
+} from "./utils/dimensions";
 class Chartbase {
   constructor(id, metaData) {
     this.chartSvg;
     this.data = metaData;
     this._createRayLines = this._createRayLines.bind(this);
-    this.scaleX = createXScales([0, 187]);
+    this.scaleX = createXScales([0, metalength]);
     this.scaleY = createYScales([6, 10]);
     this._buildSVG(id);
     this._createRayLines(this.data);
@@ -17,10 +23,10 @@ class Chartbase {
   _buildArcTitleBg() {
     const arc = d3
       .arc()
-      .innerRadius(580)
-      .outerRadius(780)
+      .innerRadius(radii.titlesBarStart)
+      .outerRadius(radii.titlesBarEnd)
       .startAngle(0)
-      .endAngle(1.913 * Math.PI);
+      .endAngle(dimensions.endAngle);
 
     const arcTitleGroup = this.chartSvg
       .append("g")
@@ -36,7 +42,7 @@ class Chartbase {
           chartDimensions.height / 2 +
           ")"
       );
-    arcTitleGroup.append("path").attr("d", arc).attr("fill", "#666");
+    arcTitleGroup.append("path").attr("class", "titledonut").attr("d", arc);
   }
   _buildSVG = (chartId) => {
     console.log("building");
@@ -55,7 +61,7 @@ class Chartbase {
       .attr("height", "100%");
   };
   _createRayLines(metadata) {
-    const radius = 800;
+    const radius = radii.raylines;
     this.chartSvg
       .append("g")
       //.attr("class", "all-axis-lines")

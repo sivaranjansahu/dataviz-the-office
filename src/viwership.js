@@ -1,9 +1,15 @@
 import * as d3 from "d3";
-import { chartDimensions, margins, dimensions } from "./utils/dimensions";
+import {
+  chartDimensions,
+  margins,
+  dimensions,
+  radii,
+  metalength,
+} from "./utils/dimensions";
 import { createXScales, createViewershipYScales } from "./scales";
 class ViewershipAreaChart {
   constructor(chartEl, data, mikeData, options) {
-    this.scaleX = createXScales([0, 187]);
+    this.scaleX = createXScales([0, metalength]);
     this.scaleY = createViewershipYScales([0, 25]);
     this.spkrScaleY = createViewershipYScales([0, 25]);
     this.mikeData = mikeData;
@@ -47,7 +53,7 @@ class ViewershipAreaChart {
       .attr(
         "d",
         areaGen
-          .innerRadius(50)
+          .innerRadius(radii.viewershipStart)
           .outerRadius((d) => this.scaleY(parseFloat(d.Viewership)))(this.data)
       );
   }

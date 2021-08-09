@@ -1,6 +1,7 @@
 /* //Backgrounds */
 :root {
   --bodybg: #222;
+  --titlesBar: #333;
 }
 body {
   padding: 0;
@@ -55,4 +56,13 @@ h2 {
   font-weight: 500;
   font-style: normal;
   color: #eaeaea;
+}
+
+.ratinglabel {
+  opacity: 0;
+  fill: #eaeaea;
+  transition: opacity 1 ease-out;
+}
+.titledonut {
+  fill: var(--titlesBar);
 }

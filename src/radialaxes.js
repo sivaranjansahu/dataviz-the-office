@@ -2,11 +2,16 @@ import * as d3 from "d3";
 import { nest, entries } from "d3-collection";
 import { axisRadialInner } from "d3-radial-axis";
 import { createXScales, createYScales } from "./scales";
-import { chartDimensions, dimensions } from "./utils/dimensions";
+import {
+  chartDimensions,
+  dimensions,
+  metalength,
+  radii,
+} from "./utils/dimensions";
 class RadialAxes {
   constructor(chartEl, data) {
     this.svg = chartEl;
-    this.scaleX = createXScales([0, 187]);
+    this.scaleX = createXScales([0, metalength]);
     this.scaleY = createYScales([6, 10]);
     this.allAxisLinesGroup;
     this.pieData = this._groupBySeason(data);
@@ -17,7 +22,7 @@ class RadialAxes {
 
   _createAxes() {
     const ticksAmount = 30;
-    const tickStep = 186 / ticksAmount;
+    const tickStep = metalength / ticksAmount;
     const step = Math.ceil(tickStep / 5) * 5;
 
     this.allAxisLinesGroup = this.svg
@@ -36,10 +41,10 @@ class RadialAxes {
       .append("g")
       .classed("axis", true)
       .call(
-        axisRadialInner(this.scaleX, 900)
+        axisRadialInner(this.scaleX, radii.absEpisode)
           .ticks(ticksAmount)
           .tickFormat(d3.format("d"))
-          .tickValues(d3.range(0, 186 + step, step))
+          .tickValues(d3.range(0, metalength + step, step))
           //.innerTickSize(-width)
           .tickSize(12)
       );
@@ -47,19 +52,12 @@ class RadialAxes {
 
   _createSeasonPie() {
     const that = this;
-    var pie = d3
-      .pie()
-      .startAngle(0)
-      .endAngle(Math.PI * 1.9)
-      .value(function (d) {
-        return d.value.value;
-      });
 
     var pieGenerator = d3
       .pie()
       .startAngle(0)
       .padAngle(0.01)
-      .endAngle(Math.PI * 1.915)
+      .endAngle(dimensions.endAngle)
       .value(function (d) {
         return d.value;
       })
@@ -85,7 +83,10 @@ class RadialAxes {
         "#eaeaea",
       ]);
 
-    var arcBorder = d3.arc().innerRadius(540).outerRadius(570);
+    var arcBorder = d3
+      .arc()
+      .innerRadius(radii.characterTimelineEnd)
+      .outerRadius(radii.characterTimelineEnd + 30);
     const arcs = this.allAxisLinesGroup
       .selectAll("whatever")
       .data(data_ready)
@@ -93,7 +94,13 @@ class RadialAxes {
 
     arcs
       .append("path")
-      .attr("d", d3.arc().innerRadius(200).outerRadius(540))
+      .attr(
+        "d",
+        d3
+          .arc()
+          .innerRadius(radii.characterTimelineStart)
+          .outerRadius(radii.characterTimelineEnd)
+      )
       .attr("fill", function (d) {
         return color(parseInt(d.data.key));
       })

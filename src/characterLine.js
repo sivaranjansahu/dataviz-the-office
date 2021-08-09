@@ -1,5 +1,11 @@
 import * as d3 from "d3";
-import { chartDimensions, margins, dimensions } from "./utils/dimensions";
+import {
+  chartDimensions,
+  margins,
+  dimensions,
+  radii,
+  metalength,
+} from "./utils/dimensions";
 import { parseTime } from "./utils/parsers";
 import radialAxis, { axisRadialInner, axisRadialOuter } from "d3-radial-axis";
 
@@ -27,7 +33,7 @@ class CharacterLine {
 
   _padData() {
     let newData = [];
-    for (let i = 0; i < 187; i++) {
+    for (let i = 0; i < metalength; i++) {
       const found = this.data.find((d) => d.key == i + 1);
       if (found) {
         newData.push(found);
@@ -79,13 +85,13 @@ class CharacterLine {
   }
 
   _createScales(offset) {
-    var innerRadius = 200 + offset,
+    var innerRadius = radii.characterTimelineStart + offset,
       outerRadius = innerRadius + 100;
-    var fullCircle = 1.9 * Math.PI;
+    var fullCircle = dimensions.endAngle;
 
     this.scaleX = d3.scaleTime().range([0, fullCircle]);
     this.scaleX.domain(
-      [0, 187]
+      [0, metalength]
       // d3.extent(this.data, function (d) {
       //   return parseTime(d.Date);
       // })

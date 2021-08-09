@@ -1,7 +1,8 @@
 import * as d3 from "d3";
+import { radii, dimensions } from "./utils/dimensions";
 const innerRadius = 800,
   outerRadius = 900;
-const fullCircle = 1.9 * Math.PI;
+const fullCircle = dimensions.endAngle;
 
 export function createXScales(xExtent) {
   const scaleX = d3.scaleLinear().range([0, fullCircle]);
@@ -10,7 +11,6 @@ export function createXScales(xExtent) {
 }
 
 export function createYScales(yExtent) {
-  var fullCircle = 1.9 * Math.PI;
   const scaleY = d3.scaleRadial().range([innerRadius, outerRadius]);
 
   scaleY.domain(yExtent);
@@ -19,8 +19,7 @@ export function createYScales(yExtent) {
 
 export function createViewershipYScales(yExtent) {
   var innerRadius = 0,
-    outerRadius = 300;
-  var fullCircle = 1.9 * Math.PI;
+    outerRadius = radii.viewershipEnd;
   const scaleY = d3.scaleRadial().range([innerRadius, outerRadius]);
 
   scaleY.domain(yExtent);
@@ -29,8 +28,7 @@ export function createViewershipYScales(yExtent) {
 
 export function createMedianRatingYScales(yExtent) {
   var innerRadius = 0,
-    outerRadius = 200;
-  var fullCircle = 1.9 * Math.PI;
+    outerRadius = radii.medianRatingEnd;
   const scaleY = d3.scaleRadial().range([innerRadius, outerRadius]);
 
   scaleY.domain(yExtent);
