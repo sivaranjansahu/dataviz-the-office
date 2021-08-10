@@ -44,7 +44,7 @@ class RadialAxes {
         axisRadialInner(this.scaleX, radii.absEpisode)
           .ticks(ticksAmount)
           .tickFormat(d3.format("d"))
-          .tickValues(d3.range(0, metalength + step, step))
+          .tickValues(d3.range(0, metalength + 1, step))
           //.innerTickSize(-width)
           .tickSize(12)
       );
@@ -56,7 +56,7 @@ class RadialAxes {
     var pieGenerator = d3
       .pie()
       .startAngle(0)
-      .padAngle(0.01)
+      .padAngle(0.005)
       .endAngle(dimensions.endAngle)
       .value(function (d) {
         return d.value;
@@ -72,15 +72,15 @@ class RadialAxes {
       .scaleOrdinal()
       .domain([1, 2, 3, 4, 5, 6, 7, 8, 9])
       .range([
-        "#eaeaea",
-        "#eaeaea",
-        "#eaeaea",
-        "white",
-        "#eaeaea",
-        "#eaeaea",
-        "#eaeaea",
-        "#eaeaea",
-        "#eaeaea",
+        "#292929",
+        "#222",
+        "#292929",
+        "#222",
+        "#292929",
+        "#222",
+        "#292929",
+        "#222",
+        "#292929",
       ]);
 
     var arcBorder = d3
@@ -104,8 +104,7 @@ class RadialAxes {
       .attr("fill", function (d) {
         return color(parseInt(d.data.key));
       })
-      .style("stroke-width", "0px")
-      .style("opacity", 0.1);
+      .style("stroke-width", "0px");
 
     arcs
       .append("path")

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { radii, dimensions } from "./utils/dimensions";
-const innerRadius = 800,
-  outerRadius = 900;
+const innerRadius = radii.ratingsBarStart,
+  outerRadius = radii.ratingsBarEnd;
 const fullCircle = dimensions.endAngle;
 
 export function createXScales(xExtent) {
@@ -33,4 +33,8 @@ export function createMedianRatingYScales(yExtent) {
 
   scaleY.domain(yExtent);
   return scaleY;
+}
+
+export function createShapeYScales(yExtent) {
+  return d3.scaleLinear().range([1, 16]).domain(yExtent);
 }

@@ -16,13 +16,14 @@ export const radii = {
   characterTimelineEnd: 540,
   titlesBarStart: 580,
   titlesBarEnd: 780,
-  ratingsBarStart: 800,
-  ratingsBarEnd: 850,
-  awrdsBarStart: 960,
-  awrdsBarEnd: 1000,
+  titlesTextStart: 630,
+  ratingsBarStart: 840,
+  ratingsBarEnd: 980,
+  awrdsBarStart: 600,
+  awrdsBarEnd: 630,
   raylines: 800,
   medianRatingEnd: 200,
-  absEpisode: 900,
+  absEpisode: 820,
 };
 
 export const bgcolors = {

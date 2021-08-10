@@ -26,18 +26,17 @@ class ChartElements {
       .scaleSequential()
       .domain([0, 20])
       .interpolator(d3.interpolateRdYlGn);
-    // .range(["#d73027", "#1a9850"])
-    // .interpolate(d3.interpolateHcl);
-
-    console.log(d3.interpolateRdGy(0.3));
     const rad1 = new RadialLine(this.svg, this.data, { classes: "first-line" });
+
+    const charList = this.characterData.map((d) => d.key);
+    console.log(charList);
     for (let i = 0; i < 20; i++) {
       const data = this._characterTotalLinesByEpisode(
         this.characterData[i].values
       );
       new CharacterLine(this.svg, data, {
         classes: "",
-        offset: i * 15,
+        offset: i * 20,
         color: color1(i),
       });
     }

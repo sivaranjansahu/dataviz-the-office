@@ -11,7 +11,7 @@ import { createXScales, createYScales } from "./scales";
 
 class RadialBars {
   constructor(chartEl, data, options) {
-    this.scaleX = createXScales([0, metalength]);
+    this.scaleX = createXScales([0, metalength + 1]);
     this.scaleY = createYScales([6, 10]);
     this.svg = chartEl;
     this.data = data;
@@ -96,7 +96,7 @@ class RadialBars {
       .attr("id", (d) => {
         return "barchart-" + d.absEpisode;
       })
-      .attr("stroke-width", 4)
+      .attr("stroke-width", 3)
       .attr(
         "d",
         d3
@@ -132,7 +132,9 @@ class RadialBars {
           "rotate(" +
           ((that.scaleX(d.absEpisode) * 180) / Math.PI - 90) +
           ")" +
-          "translate(600,0)"
+          "translate(" +
+          radii.titlesTextStart +
+          ",0)"
         );
       });
 

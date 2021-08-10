@@ -31,16 +31,26 @@ body {
 }
 .median-rating-line path {
   stroke: rgb(211, 15, 162);
-  stroke-width: 2;
+  stroke-width: 1;
 }
+
+.testarc {
+  stroke: #535353;
+  stroke-width: 2;
+  stroke-dasharray: 1, 10;
+  stroke-linecap: round;
+  fill: none;
+}
+
 .rayline {
   stroke: #535353;
   stroke-width: 0.5;
   stroke-opacity: 0.3;
 }
 
-#chart {
-  transform: rotate(4.5deg);
+.master-chart-group {
+  transform: rotate(7.5deg);
+  transform-origin: center center;
 }
 .titlelabel {
   fill: #eaeaea;
@@ -65,4 +75,19 @@ h2 {
 }
 .titledonut {
   fill: var(--titlesBar);
+}
+
+.shape {
+  opacity: 0.8;
+}
+.vertical-legend-line {
+  stroke: rgb(211, 15, 162);
+  stroke-width: 1;
+}
+
+.character-vertical-label {
+  fill: #ccc;
+  font-size: 10px;
+  text-anchor: middle;
+  font-weight: 500;
 }
