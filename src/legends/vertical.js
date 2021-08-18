@@ -14,6 +14,7 @@ class VerticalLegends {
     this._drawArc = this._drawArc.bind(this);
     this._drawLegend();
     this._drawArc();
+    this._textBg();
   }
 
   arcGen = d3
@@ -48,7 +49,7 @@ class VerticalLegends {
     var angle = d3
       .scaleLinear()
       .domain([0, 49])
-      .range([1.96 * Math.PI, 2.045 * Math.PI]);
+      .range([1.965 * Math.PI, 2.04 * Math.PI]);
     var line = d3
       .lineRadial()
       //.interpolate("basis")
@@ -59,11 +60,11 @@ class VerticalLegends {
       });
 
     const l = this.legendsGroup.append("g");
-
+    l.attr("class", "wedge-headers-group");
     const titleLabelRad =
       radii.titlesBarStart +
-      (radii.titlesBarEnd - radii.titlesBarStart) / 2 -
-      33;
+      (radii.titlesBarEnd - radii.titlesBarStart) / 2 +
+      20;
     l.append("path")
       .datum(d3.range(50))
       .attr("class", "testarc")
@@ -71,14 +72,52 @@ class VerticalLegends {
 
     l.append("text")
       .text("Episodes")
+      .attr("class", "wedge-title")
       .attr("x", 0)
       .attr("y", -(titleLabelRad - 3))
-      .attr("class", "character-vertical-label");
+      .attr("class", "character-vertical-label vertical-header");
 
+    const awardsLabelRad =
+      radii.awrdsBarStart +
+      (radii.awrdsBarEnd - radii.awrdsBarStart) / 2 -
+      33 +
+      16;
+    l.append("path")
+      .datum(d3.range(50))
+      .attr("class", "testarc")
+      .attr("d", line.radius(awardsLabelRad));
+
+    l.append("text")
+      .text("Awards")
+      .attr("class", "wedge-title")
+      .attr("x", 0)
+      .attr("y", -(awardsLabelRad - 3))
+      .attr("class", "character-vertical-label vertical-header");
+
+    const screnTimeLabelRad = radii.characterTimelineEnd + 10;
+    const screenTimeGroup = l
+      .append("g")
+      .attr("id", "downarrow")
+      .attr("transform", "translate(-10," + (-screnTimeLabelRad + 10) + ")");
+
+    l.append("text")
+      .text("Screen time")
+      .attr("class", "wedge-title")
+      .attr("x", 0)
+      .attr("y", -screnTimeLabelRad + 10)
+      .attr("class", "character-vertical-label vertical-header");
+    l.append("line")
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("y1", -screnTimeLabelRad + 15)
+      .attr("y2", -screnTimeLabelRad + 37)
+      .attr("class", "screentime-connector");
+
+    // d3.xml(require("../assets/arrow-down.svg")).then((data) => {
+    //   screenTimeGroup.node().append(data.documentElement);
+    // });
     const ratingsLabelRad =
-      radii.ratingsBarStart +
-      (radii.ratingsBarEnd - radii.ratingsBarStart) / 2 -
-      33;
+      radii.ratingsBarStart + (radii.ratingsBarEnd - radii.ratingsBarStart) / 2;
 
     l.append("path")
       .datum(d3.range(50))
@@ -87,9 +126,10 @@ class VerticalLegends {
 
     l.append("text")
       .text("IMBD Rating")
+      .attr("class", "wedge-title")
       .attr("x", 0)
       .attr("y", -(ratingsLabelRad - 3))
-      .attr("class", "character-vertical-label");
+      .attr("class", "character-vertical-label vertical-header");
 
     const chars = [
       "Michael",
@@ -123,28 +163,71 @@ class VerticalLegends {
       "Jo",
       "Deangelo",
     ];
+    let chTitles = l.append("g").attr("class", "character-titles-group");
     for (let i = 0; i < 20; i++) {
-      l.append("path")
+      chTitles
+        .append("path")
         .datum(d3.range(50))
         .attr("class", "testarc")
-        .attr("d", line.radius(radii.characterTimelineEnd - 30 - i * 20));
+        .attr("d", line.radius(radii.characterTimelineEnd - 30 - i * 25));
 
-      l.append("text")
-        .text(chars[i])
-        .attr("x", 0)
-        .attr("y", -(radii.characterTimelineEnd - 33 - i * 20))
-        .attr("class", "character-vertical-label");
+      if (false) {
+        l.append("svg:image")
+          .attr("x", -10)
+          .attr("y", -(radii.characterTimelineEnd - 10 - i * 20))
+          .attr("width", 30)
+          .attr("height", 30)
+          .attr("class", "avatar")
+          .attr("xlink:href", require("../assets/michael.jpg"));
+      } else {
+        l.append("text")
+          .text(chars[i])
+          .attr("x", 0)
+          .attr("y", -(radii.characterTimelineEnd - 33 - i * 25))
+          .attr("class", "character-vertical-label");
+      }
 
-      //   l.append("svg:image")
-      //     .attr("x", -15)
-      //     .attr("y", -(radii.characterTimelineEnd - 15 - i * 20))
-      //     .attr("width", 30)
-      //     .attr("height", 30)
-      //     .attr("xlink:href", require("../assets/michael.jpg"));
+      // l.selectAll("image").on("mouseover", (e, d) => {
+      //   this.attr("transform", "scale(2");
+      // });
 
       //l.append("line");
       //i = i + 2;
     }
+  }
+
+  _textBg() {
+    const ctx = document.querySelector(".wedge-headers-group");
+    const charGroupCtx = document.querySelector(".character-titles-group");
+
+    //   textElm = ctx.querySelector(".vertical-header"),
+    //   SVGRect = textElm.getBBox();
+
+    // var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    // rect.setAttribute("x", SVGRect.x - 5);
+    // rect.setAttribute("y", SVGRect.y - 2.5);
+    // rect.setAttribute("width", SVGRect.width + 10);
+    // rect.setAttribute("height", SVGRect.height + 5);
+    // rect.setAttribute("fill", "yellow");
+    // ctx.insertBefore(rect, textElm);
+
+    document
+      .querySelectorAll(".vertical-header,.character-vertical-label")
+      .forEach((d, i) => {
+        const textElm = d;
+        const SVGRect = textElm.getBBox();
+
+        var rect = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect"
+        );
+        rect.setAttribute("x", SVGRect.x - 5);
+        rect.setAttribute("y", SVGRect.y - 2.5);
+        rect.setAttribute("width", SVGRect.width + 10);
+        rect.setAttribute("height", SVGRect.height + 5);
+        rect.setAttribute("class", "text-label-bg");
+        ctx.insertBefore(rect, textElm);
+      });
   }
 }
 

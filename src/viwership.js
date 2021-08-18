@@ -9,7 +9,7 @@ import {
 import { createXScales, createViewershipYScales } from "./scales";
 class ViewershipAreaChart {
   constructor(chartEl, data, mikeData, options) {
-    this.scaleX = createXScales([0, metalength]);
+    this.scaleX = createXScales([0, metalength + 1]);
     this.scaleY = createViewershipYScales([0, 25]);
     this.spkrScaleY = createViewershipYScales([0, 25]);
     this.mikeData = mikeData;

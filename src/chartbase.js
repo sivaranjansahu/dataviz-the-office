@@ -20,12 +20,43 @@ class Chartbase {
     this.scaleY = createYScales([6, 10]);
 
     this._buildSVG(id);
+    this._buildWedge();
+    const vertLegend = new VerticalLegend(this.svgParent);
 
     this._createRayLines(this.data);
     this._buildArcTitleBg();
-    //this._awardCircle();
+    this._createFilters();
+    this._awardCircle();
 
     return this.chartSvg;
+  }
+
+  _buildWedge() {
+    const arc = d3
+      .arc()
+      .innerRadius(0)
+      .outerRadius(radii.ratingsBarEnd)
+
+      .startAngle(
+        dimensions.endAngle + 0.015 + (2 * Math.PI - dimensions.endAngle) / 2
+      )
+      .endAngle(2 * Math.PI + (2 * Math.PI - dimensions.endAngle) / 2);
+
+    const wedgeGroup = this.svgParent
+      .append("g")
+      .attr("class", "wedge-group")
+      .attr("width", dimensions.width)
+      .attr("height", dimensions.height)
+      .append("g")
+      .attr(
+        "transform",
+        "translate(" +
+          chartDimensions.width / 2 +
+          "," +
+          chartDimensions.height / 2 +
+          ")"
+      );
+    wedgeGroup.append("path").attr("class", "wedge").attr("d", arc);
   }
 
   _buildArcTitleBg() {
@@ -64,7 +95,7 @@ class Chartbase {
       .attr("class", "chart-bg")
       .attr("width", "100%")
       .attr("height", "100%");
-    const vertLegend = new VerticalLegend(this.svgParent);
+
     this.chartSvg = this.svgParent
       .append("g")
       .attr("class", "master-chart-group");
@@ -89,8 +120,9 @@ class Chartbase {
       .attr("cy", 0)
       .attr("r", radii.awrdsBarStart)
       .style("fill", "none")
-      .style("stroke", "#bababa")
-      .style("stroke-width", radii.awrdsBarEnd - radii.awrdsBarStart);
+      .style("stroke", "#222")
+      .style("stroke-width", radii.awrdsBarEnd - radii.awrdsBarStart + 10);
+    //.style("filter", "url(#drop-shadow)");
   }
 
   _createRayLines(metadata) {
@@ -130,7 +162,27 @@ class Chartbase {
       });
   }
 
-  _buildYAxis = () => {};
+  _createFilters() {
+    var defs = this.chartSvg.append("defs");
+    var filter = defs.append("filter").attr("id", "drop-shadow");
+
+    filter
+      .append("feGaussianBlur")
+      .attr("in", "SourceAlpha")
+      .attr("stdDeviation", 2)
+      .attr("result", "blur");
+    filter
+      .append("feOffset")
+      .attr("in", "blur")
+      .attr("dx", 1)
+      .attr("dy", 1)
+      .attr("result", "offsetBlur");
+
+    var feMerge = filter.append("feMerge");
+
+    feMerge.append("feMergeNode").attr("in", "offsetBlur");
+    feMerge.append("feMergeNode");
+  }
 }
 
 export default Chartbase;

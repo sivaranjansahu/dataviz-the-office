@@ -11,7 +11,7 @@ import {
 class RadialAxes {
   constructor(chartEl, data) {
     this.svg = chartEl;
-    this.scaleX = createXScales([0, metalength]);
+    this.scaleX = createXScales([0, metalength + 1]);
     this.scaleY = createYScales([6, 10]);
     this.allAxisLinesGroup;
     this.pieData = this._groupBySeason(data);
@@ -37,17 +37,18 @@ class RadialAxes {
           ")"
       );
 
-    this.allAxisLinesGroup
-      .append("g")
-      .classed("axis", true)
-      .call(
-        axisRadialInner(this.scaleX, radii.absEpisode)
-          .ticks(ticksAmount)
-          .tickFormat(d3.format("d"))
-          .tickValues(d3.range(0, metalength + 1, step))
-          //.innerTickSize(-width)
-          .tickSize(12)
-      );
+    //AbsEpisode radial group
+    // this.allAxisLinesGroup
+    //   .append("g")
+    //   .classed("axis", true)
+    //   .call(
+    //     axisRadialInner(this.scaleX, radii.absEpisode)
+    //       .ticks(ticksAmount)
+    //       .tickFormat(d3.format("d"))
+    //       .tickValues(d3.range(0, metalength + 1, step))
+    //       //.innerTickSize(-width)
+    //       .tickSize(12)
+    //   );
   }
 
   _createSeasonPie() {
@@ -72,15 +73,16 @@ class RadialAxes {
       .scaleOrdinal()
       .domain([1, 2, 3, 4, 5, 6, 7, 8, 9])
       .range([
-        "#292929",
-        "#222",
-        "#292929",
-        "#222",
-        "#292929",
-        "#222",
-        "#292929",
-        "#222",
-        "#292929",
+        "#333",
+        "#444",
+        "#333",
+        "#444",
+        "#333",
+        "#444",
+        "#333",
+        "#444",
+        "#333",
+        "#444",
       ]);
 
     var arcBorder = d3
@@ -104,13 +106,13 @@ class RadialAxes {
       .attr("fill", function (d) {
         return color(parseInt(d.data.key));
       })
+      .attr("fill-opacity", 0.3)
       .style("stroke-width", "0px");
 
     arcs
       .append("path")
       .attr("class", "arcborder")
-      .attr("fill", "yellow")
-      .attr("fill-opacity", 0.6)
+      .attr("fill-opacity", 0.3)
       .attr("id", function (d, i) {
         return "arcborder" + i;
       })
@@ -142,9 +144,8 @@ class RadialAxes {
       .enter()
       .append("text")
       .attr("class", "donutText")
-      .attr("font-weight", "bold")
-      .attr("dy", 20)
-      .style("fill", "#fafafa")
+      .attr("dy", 25)
+
       .append("textPath")
       .attr("startOffset", "50%")
       .style("text-anchor", "middle")
@@ -152,7 +153,7 @@ class RadialAxes {
         return "#donutArc" + i;
       })
       .text(function (d) {
-        return "Season " + d;
+        return "Season 0" + d;
       });
   }
 

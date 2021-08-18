@@ -9,21 +9,37 @@
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
-    <section class="container mx-auto pt-20">
+    <section class="mx-auto pt-20 px-10">
+      <div class="container mx-auto ">
+      <h3 class="mb-12 text-4xl">The chronicles of</h1>
       <h1 class="mb-32 text-8xl">The Office</h1>
-      <div id="chart"></div>
-      <footer class="flex w-full flex-between mt-32">
-        <div class="flex-1">
-          <h2 class="text-3xl">Top Episodes</h2>
+    </div>
+      <div id="chart" class="flex justify-center items-center" ></div>
+      
+      <footer class="container mx-auto flex w-full gap-x-12 flex-between mt-32">
+        <div class="flex-1 pr-10" id="top-episodes">
+          <h2 class="text-3xl mb-10">Top Episodes</h2>
+          <ul class="list-none"></ul>
         </div>
-        <div class="flex-1">
-          <h2 class="text-3xl">Top Directors</h2>
+        <div class="flex-1 pr-10" id="top-directors">
+          <h2 class="text-3xl mb-10">Top Directors</h2>
+          <ul class="list-none"></ul>
         </div>
-        <div class="flex-1">
-          <h2 class="text-3xl">Top Writers</h2>
+        <div class="flex-1" id="top-writers">
+          <h2 class="text-3xl mb-10">Top Writers</h2>
+          <ul class="list-none"></ul>
         </div>
       </footer>
     </section>
+    <div
+      class="absolute left-0 top-0 bg-gray-200 p-5 popup hidden"
+      id="popup"
+      class="popup"
+    >
+      <button class="close absolute right-2 top-2">X</button>
+      <h3></h3>
+      <p></p>
+    </div>
     <script src="./src/index.js"></script>
   </body>
 </html>

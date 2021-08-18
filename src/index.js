@@ -5,16 +5,17 @@ import { nest } from "d3-collection";
 
 window.addEventListener("DOMContentLoaded", () => {
   Promise.all([
-    d3.csv(require("./data/officemeta.csv")),
+    d3.csv(require("./data/meta.csv")),
     d3.csv(require("./data/episodes.csv")),
+    d3.csv(require("./data/awards.csv")),
   ])
 
-    .then(([metaData, episodes]) => {
+    .then(([metaData, episodes, awards]) => {
       let groupedByChar = _groupByChar(episodes, "speaker");
       const characterData = groupedByChar.slice(0, 30);
       const svg = new Chartbase("#chart", metaData);
       const groupedByEpisode = _groupByEpisode(groupedByChar[0].values);
-      const chart = new CharteElements(svg, metaData, characterData);
+      const chart = new CharteElements(svg, metaData, characterData, awards);
     })
     .catch((e) => {
       console.log(e);

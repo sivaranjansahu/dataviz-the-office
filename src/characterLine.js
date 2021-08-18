@@ -20,7 +20,9 @@ class CharacterLine {
     this.data = data;
     this.scaleX;
     this.scaleY;
+    this.popup = document.querySelector("#popup");
 
+    this._logme = this._logme.bind(this);
     this._createScales = this._createScales.bind(this);
     this._drawLine = this._drawLine.bind(this);
     this._drawShapes = this._drawShapes.bind(this);
@@ -30,7 +32,6 @@ class CharacterLine {
     this._createScales(this.offset);
     this._drawShapes();
     //this._drawLine();
-
     return this.linegroup;
   }
 
@@ -82,16 +83,18 @@ class CharacterLine {
         chartDimensions.height / 2 +
         ")"
     );
-    shapeGroup
+    const characterCirclesG = shapeGroup
       .selectAll("circle.shape")
 
       .data(this.newData)
 
-      .enter()
-      //.filter((d) => d.value !== null)
+      .enter();
+    //.filter((d) => d.value !== null)
+
+    let crcls = characterCirclesG
       .append("circle")
       .attr("fill", (d) => {
-        return parseInt(d.value) > 0 ? this.color : "#fff";
+        return parseInt(d.value) > 0 ? this.color : "#666";
       })
       .attr("class", "shape")
       // .attr("cx", (d) => {
@@ -117,6 +120,17 @@ class CharacterLine {
       .attr("r", (d) => {
         return this.shapeScaleY(parseInt(d.value || 0.5));
       });
+    crcls.call(this._logme);
+    //.call(this._logme);
+
+    crcls.selectAll("circle").on("mouseover", this._logme);
+  }
+
+  _logme(d) {
+    d.on("mouseover", (e, d, i) => {
+      this.popup.querySelector("h3").innerText = d.value;
+      //console.log(d.data());
+    });
   }
 
   _drawLine() {

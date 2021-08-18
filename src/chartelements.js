@@ -1,16 +1,24 @@
 import * as d3 from "d3";
-import { chartDimensions, margins, dimensions } from "./utils/dimensions";
+import {
+  chartDimensions,
+  margins,
+  dimensions,
+  radii,
+} from "./utils/dimensions";
 import { nest } from "d3-collection";
 import RadialLine from "./radialline";
 import CharacterLine from "./characterLine";
 import RadialBars from "./radialbars";
 import Viewership from "./viwership";
 import MedianRating from "./medianrating";
+import Footer from "./footer";
+import Awards from "./awards";
 
 class ChartElements {
-  constructor(chartEl, metaData, characterData) {
+  constructor(chartEl, metaData, characterData, awardsData) {
     this.svg = chartEl;
     this.data = metaData;
+    this.awardsData = awardsData;
     this.characterData = characterData;
     this._drawCircles = this._drawCircles.bind(this);
     //this._drawCircles();
@@ -25,18 +33,23 @@ class ChartElements {
     var color1 = d3
       .scaleSequential()
       .domain([0, 20])
-      .interpolator(d3.interpolateRdYlGn);
+      //.interpolator(d3.interpolateRdYlGn);
+      .interpolator(d3.interpolateCool);
     const rad1 = new RadialLine(this.svg, this.data, { classes: "first-line" });
-
+    const awardsEl = new Awards(this.svg, this.awardsData);
     const charList = this.characterData.map((d) => d.key);
+    const charToShow = 20;
+    const offsetUnit =
+      (radii.characterTimelineEnd * 1.1 - radii.characterTimelineStart) /
+      charToShow;
     console.log(charList);
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < charToShow; i++) {
       const data = this._characterTotalLinesByEpisode(
         this.characterData[i].values
       );
       new CharacterLine(this.svg, data, {
         classes: "",
-        offset: i * 20,
+        offset: i * offsetUnit,
         color: color1(i),
       });
     }
@@ -46,9 +59,10 @@ class ChartElements {
 
     const radialBars = new RadialBars(this.svg, this.data, {});
     const viewershipArea = new Viewership(this.svg, this.data, {});
-    const medianRatingsLine = new MedianRating(this.svg, this.data, {
-      classes: "median-rating",
-    });
+    const footerData = new Footer(this.svg, this.data);
+    // const medianRatingsLine = new MedianRating(this.svg, this.data, {
+    //   classes: "median-rating",
+    // });
   }
   _createXscale() {}
 

@@ -12,14 +12,23 @@ import { createXScales, createYScales } from "./scales";
 class RadialBars {
   constructor(chartEl, data, options) {
     this.scaleX = createXScales([0, metalength + 1]);
-    this.scaleY = createYScales([6, 10]);
+    this.scaleY = createYScales([7, 10]);
     this.svg = chartEl;
+    this.radialBarsGroup;
     this.data = data;
-
+    this.popup = document.querySelector("#popup");
+    this._showPopup = this._showPopup.bind(this);
+    this._createRatingTicks = this._createRatingTicks.bind(this);
     this._handleMouseOver = this._handleMouseOver.bind(this);
     this._handleMouseOut = this._handleMouseOut.bind(this);
-    this._createGradient();
+    // this._createGradient();
     this._drawChart = this._drawChart.bind(this);
+
+    document.querySelector("#popup .close").addEventListener("click", () => {
+      !this.popup.classList.contains("hidden")
+        ? this.popup.classList.add("hidden")
+        : null;
+    });
 
     this.color1 = d3
       .scaleLinear()
@@ -27,7 +36,23 @@ class RadialBars {
       .range(["#d73027", "#1a9850"])
       .interpolate(d3.interpolateHcl);
 
+    this.radialBarsGroup = this.svg
+      .append("g")
+      .attr("class", "radial-bars")
+      .attr("width", dimensions.width)
+      .attr("height", dimensions.height)
+      .append("g")
+      .attr(
+        "transform",
+        "translate(" +
+          chartDimensions.width / 2 +
+          "," +
+          chartDimensions.height / 2 +
+          ")"
+      );
+
     this._drawChart();
+    this._createRatingTicks();
   }
 
   _createGradient() {
@@ -70,20 +95,6 @@ class RadialBars {
     var innerRadius = radii.ratingsBarStart,
       outerRadius = radii.ratingsBarEnd;
     const that = this;
-    this.radialBarsGroup = this.svg
-      .append("g")
-      .attr("class", "radial-bars")
-      .attr("width", dimensions.width)
-      .attr("height", dimensions.height)
-      .append("g")
-      .attr(
-        "transform",
-        "translate(" +
-          chartDimensions.width / 2 +
-          "," +
-          chartDimensions.height / 2 +
-          ")"
-      );
 
     this.radialBarsGroup
 
@@ -91,12 +102,10 @@ class RadialBars {
       .data(this.data)
       .enter()
       .append("path")
-      .attr("fill", this.color1)
-      .attr("stroke", "#aaa")
+      .attr("class", "rating-bar")
       .attr("id", (d) => {
         return "barchart-" + d.absEpisode;
       })
-      .attr("stroke-width", 3)
       .attr(
         "d",
         d3
@@ -155,7 +164,7 @@ class RadialBars {
           "rotate(" +
           ((that.scaleX(d.absEpisode) * 180) / Math.PI - 90) +
           ")" +
-          "translate(770,0)"
+          `translate(${radii.titlesBarEnd - 15},0)`
         );
       });
 
@@ -178,7 +187,9 @@ class RadialBars {
     const titleTexts = titlesGroup
       .append("text")
       .text(function (d) {
-        return d.EpisodeTitle;
+        return d.EpisodeTitle.length > 18
+          ? d.EpisodeTitle.substring(0, 18) + ".."
+          : d.EpisodeTitle;
       })
       .attr("transform", function (d) {
         return (that.scaleX(d.absEpisode) + Math.PI) % (2 * Math.PI) < Math.PI
@@ -191,8 +202,62 @@ class RadialBars {
     titlesGroup
       .selectAll(".titlelabel text")
       .on("mouseover", this._handleMouseOver)
-      .on("mouseout", this._handleMouseOut);
+      .on("mouseout", this._handleMouseOut)
+      .on("click", this._showPopup);
   }
+
+  _showPopup(e, d) {
+    if (!this.popup.classList.contains("hidden")) {
+      this.popup.classList.add("hidden");
+    } else {
+      this.popup.classList.remove("hidden");
+      this.popup.querySelector("h3").innerText =
+        "S:" + d.Season + "E:" + d.absEpisode;
+      this.popup.querySelector("p").innerText = d.About;
+      console.log(e.screenX, e.screenY);
+      this.popup.style.left =
+        e.screenX > window.innerWidth / 2 ? e.pageX - 300 : e.pageX;
+      this.popup.style.top =
+        e.screenY > window.innerHeight / 2 ? e.screenY - 200 : e.screenY;
+    }
+  }
+
+  _createRatingTicks() {
+    const ratingLablesG = this.radialBarsGroup
+      .selectAll("g.ratingaxisG")
+      .data([0, 1, 2, 3])
+      .enter()
+      .append("g")
+      .attr("class", "ratingaxisG");
+
+    ratingLablesG
+      .append("circle")
+      .attr("class", "ratingaxis")
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .attr("r", (d, i) => {
+        return (
+          radii.ratingsBarStart +
+          (d * (radii.ratingsBarEnd - radii.ratingsBarStart)) / 3
+        );
+      });
+
+    ratingLablesG
+      .append("text")
+      .text((d, i) => {
+        return d + 7;
+      })
+      .attr("class", "ratingaxis-tick")
+
+      .attr("x", 0)
+      .attr("y", (d, i) => {
+        return (
+          -radii.ratingsBarStart -
+          (d * (radii.ratingsBarEnd - radii.ratingsBarStart)) / 3
+        );
+      });
+  }
+
   _handleMouseOver(e, d) {
     document.querySelector("#axisline-" + d.absEpisode).style.stroke = "red";
     document.querySelector("#axisline-" + d.absEpisode).style[
@@ -200,6 +265,14 @@ class RadialBars {
     ] = 1;
     document.querySelector("#barchart-" + d.absEpisode).style.stroke = "red";
     document.querySelector("#rating-" + d.absEpisode).style["opacity"] = 1;
+    //this._setPopup(e, d);
+  }
+  _setPopup(e, d) {
+    this.popup.querySelector("h3").innerText =
+      "S:" + d.Season + "E:" + d.absEpisode;
+    this.popup.querySelector("p").innerText = d.About;
+    this.popup.style.left = e.pageX;
+    this.popup.style.top = e.pageY;
   }
 
   _handleMouseOut(e, d) {
