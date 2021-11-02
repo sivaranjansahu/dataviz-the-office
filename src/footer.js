@@ -45,7 +45,7 @@ export default class Footer {
       .enter()
       .append("li")
       .html(function (d) {
-        return `<li class="grid mb-5"  style="grid-template-columns:3fr 2fr 1fr">
+        return `<li class="grid mb-3"  style="grid-template-columns:3fr 2fr 1fr">
         <h3 >${d.key}</h3>
         
         <div>${d.value.episodes.length} Episodes</div>
@@ -87,7 +87,7 @@ export default class Footer {
       .enter()
       .append("li")
       .html(function (d) {
-        return `<li class="grid mb-5" style="grid-template-columns:3fr 2fr 1fr">
+        return `<li class="grid mb-3" style="grid-template-columns:3fr 2fr 1fr">
         <h3 >${d.key}</h3>
         
         <div>${d.value.episodes.length} Episodes</div>
@@ -110,7 +110,7 @@ export default class Footer {
       .enter()
       .append("li")
       .html(function (d) {
-        return `<li class="grid mb-5"  style="grid-template-columns:3fr 2fr 1fr">
+        return `<li class="grid mb-3"  style="grid-template-columns:3fr 2fr 1fr">
         <h3 >${d.EpisodeTitle}</h3>
         
         <div>S${d.Season} E${d.seasonEpisode} </div>

@@ -13,6 +13,7 @@ import Viewership from "./viwership";
 import MedianRating from "./medianrating";
 import Footer from "./footer";
 import Awards from "./awards";
+import Popover from "./popover";
 
 class ChartElements {
   constructor(chartEl, metaData, characterData, awardsData) {
@@ -23,8 +24,6 @@ class ChartElements {
     this._drawCircles = this._drawCircles.bind(this);
     //this._drawCircles();
     //this._drawRadialLine();
-
-    console.log(this._seasonMedianRating(this.data));
 
     this._rad();
   }
@@ -42,15 +41,19 @@ class ChartElements {
     const offsetUnit =
       (radii.characterTimelineEnd * 1.1 - radii.characterTimelineStart) /
       charToShow;
-    console.log(charList);
+    console.log(this.characterData);
     for (let i = 0; i < charToShow; i++) {
       const data = this._characterTotalLinesByEpisode(
-        this.characterData[i].values
+        this.characterData[i].values,
+        this.characterData[i].key
       );
+      data.absEpisode = this.characterData[i].key;
+      console.log("radial lines data", data);
       new CharacterLine(this.svg, data, {
         classes: "",
         offset: i * offsetUnit,
         color: color1(i),
+        character: "Michael",
       });
     }
     // const mikeData = this._characterTotalLinesByEpisode(
@@ -138,14 +141,17 @@ class ChartElements {
       .attr("d", line);
   };
 
-  _characterTotalLinesByEpisode(speakerData) {
+  _characterTotalLinesByEpisode(speakerData, spkr) {
     return nest()
       .key(function (d) {
         return d.episode;
       })
 
       .rollup(function (leaves) {
-        return leaves.length;
+        return {
+          lines: leaves.length,
+          speaker: spkr,
+        };
       })
       .entries(speakerData);
   }

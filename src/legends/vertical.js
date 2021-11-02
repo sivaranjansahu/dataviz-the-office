@@ -7,6 +7,16 @@ import {
   metalength,
 } from "../utils/dimensions";
 
+export function highlighteCharacterLine(character) {
+  document
+    .querySelector("#characterFullCircle" + character.toLowerCase())
+    .classList.add("highlighted");
+}
+export function unHighlighteCharacterLine() {
+  document
+    .querySelector("[id^=characterFullCircle].highlighted")
+    .classList.remove("highlighted");
+}
 class VerticalLegends {
   constructor(el) {
     this.svg = el;
@@ -44,12 +54,33 @@ class VerticalLegends {
     //   .attr("x2", 0)
     //   .attr("y2", -800);
   }
+  _drawHighlightCircle(characterRadius) {
+    var angle = d3
+      .scaleLinear()
+      .domain([0, 49])
+      .range([0, 2 * Math.PI]);
+
+    var line = d3
+      .lineRadial()
+      .radius(radii.characterTimelineEnd + 20)
+      .angle(function (d, i) {
+        return angle(i);
+      });
+  }
 
   _drawArc() {
     var angle = d3
       .scaleLinear()
       .domain([0, 49])
       .range([1.965 * Math.PI, 2.04 * Math.PI]);
+    //.range([1.965 * Math.PI, 2.04 * Math.PI]);
+    //.range([0, 2*Math.PI])
+
+    var fullAngle = d3
+      .scaleLinear()
+      .domain([0, 49])
+      .range([0, 2 * Math.PI]);
+
     var line = d3
       .lineRadial()
       //.interpolate("basis")
@@ -57,6 +88,13 @@ class VerticalLegends {
       .radius(radii.characterTimelineEnd + 20)
       .angle(function (d, i) {
         return angle(i);
+      });
+
+    var fullCircle = d3
+      .lineRadial()
+      .radius(radii.characterTimelineEnd + 20)
+      .angle(function (d, i) {
+        return fullAngle(i);
       });
 
     const l = this.legendsGroup.append("g");
@@ -169,7 +207,14 @@ class VerticalLegends {
         .append("path")
         .datum(d3.range(50))
         .attr("class", "testarc")
-        .attr("d", line.radius(radii.characterTimelineEnd - 30 - i * 25));
+        .attr("d", line.radius(radii.characterTimelineEnd - 30 - i * 23));
+
+      chTitles
+        .append("path")
+        .datum(d3.range(50))
+        .attr("class", "characterFullCircle")
+        .attr("id", "characterFullCircle" + chars[i].toLowerCase())
+        .attr("d", fullCircle.radius(radii.characterTimelineEnd - 30 - i * 23));
 
       if (false) {
         l.append("svg:image")
@@ -183,8 +228,15 @@ class VerticalLegends {
         l.append("text")
           .text(chars[i])
           .attr("x", 0)
-          .attr("y", -(radii.characterTimelineEnd - 33 - i * 25))
-          .attr("class", "character-vertical-label");
+          .attr("y", -(radii.characterTimelineEnd - 33 - i * 23))
+          .attr("class", "character-vertical-label")
+          .attr("id", "character-vertical-label-" + chars[i].toLowerCase())
+          .on("mouseover", (d) => {
+            highlighteCharacterLine(chars[i].toLowerCase());
+          })
+          .on("mouseout", (d) => {
+            unHighlighteCharacterLine();
+          });
       }
 
       // l.selectAll("image").on("mouseover", (e, d) => {

@@ -8,12 +8,14 @@ import {
   metalength,
   radii,
 } from "./utils/dimensions";
+import Popover from "./popover";
 
 class Awards {
   constructor(chartEl, data) {
     this.svg = chartEl;
     this.scaleX = createXScales([2006, 2014]);
     this.scaleY = createYScales([6, 10]);
+    this.awardPopover = new Popover(3);
 
     this.data = Array.from(
       d3.group(data, (d) => {
@@ -22,7 +24,9 @@ class Awards {
     );
     //this.data = data;
     console.log(this.data);
-    //this._drawChart = this._drawChart.bind(this);
+    this._drawChart = this._drawChart.bind(this);
+    this.createYScales = this._createAxes.bind(this);
+    this._eventListeners = this._eventListeners.bind(this);
     this._createAxes();
     this._drawChart();
   }
@@ -49,7 +53,7 @@ class Awards {
       .attr("class", "awardyear")
       .attr("data-group-index", (d, i) => i);
 
-    awardYearGroups
+    const crcls = awardYearGroups
       .selectAll("circle.award")
       .data((d, i) => {
         //console.log(d3.select(that).attr("data-group-index"));
@@ -58,7 +62,7 @@ class Awards {
       })
       .enter()
       .append("circle")
-
+      .attr("class", "award-circle")
       .attr("cx", (d, i) => {
         const startingAngle = this.scaleX(parseInt(d.Year));
         let w =
@@ -81,6 +85,8 @@ class Awards {
       .attr("class", (d) => {
         return d.Result == "Won" ? "award won" : "award nom";
       });
+
+    crcls.call(this._eventListeners);
   }
 
   _createAxes() {
@@ -125,6 +131,21 @@ class Awards {
         console.log(d);
         return "rotate(" + (that.scaleX(d) * 180) / Math.PI + ")";
       });
+  }
+
+  _eventListeners(d) {
+    d.on("mouseover", (e, d, i) => {
+      e.stopPropagation();
+
+      this.awardPopover.move(e);
+      this.awardPopover.show(
+        `<h5 class="border-b border-gray-500 pb-2 mb-3 ">${d.Year} ${d.Award}</h5><div class="border-b border-gray-500 pb-2 "><h4  class="font-bold mb-2">${d.Nominee}</h4><span class="bg-purple-400 px-1 rounded text-gray-800">${d.Result}</span></div>`,
+        `<p class="py-2">${d.Category}</p>`
+      );
+    });
+    d.on("mouseout", () => {
+      this.awardPopover.hide();
+    });
   }
 }
 

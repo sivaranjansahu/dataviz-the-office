@@ -48,8 +48,8 @@ class ViewershipAreaChart {
 
     this.viewershipAreaGroup
       .append("path")
-      .attr("fill", "lightsteelblue")
-      .attr("fill-opacity", 0.2)
+      .attr("class", "viewershipAreaChart")
+      //.attr("fill-opacity", 0.2)
       .attr(
         "d",
         areaGen

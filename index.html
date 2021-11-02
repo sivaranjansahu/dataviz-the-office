@@ -6,22 +6,44 @@
     />
 
     <link rel="stylesheet" href="https://use.typekit.net/ypz8med.css" />
+    
+
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <!-- <script src="./node_modules/feather-icons/dist/feather.js"></script> -->
+
   <body>
     <section class="mx-auto pt-20 px-10">
-      <div class="container mx-auto ">
-      <h3 class="mb-12 text-4xl">The chronicles of</h1>
-      <h1 class="mb-32 text-8xl">The Office</h1>
-    </div>
-      <div id="chart" class="flex justify-center items-center" ></div>
-      
-      <footer class="container mx-auto flex w-full gap-x-12 flex-between mt-32">
-        <div class="flex-1 pr-10" id="top-episodes">
+      <div class="container mx-auto flex justify-between">
+        <div class="w-1/2">
+          <h1 class="mb-4 text-8xl">The Office</h1>
+          <div class="mb-32 text-lg max-w-1/2">
+            An interactive visualization of the episodes, characters, IMDB
+            ratings, Viewership and awards won by the famous TV series - The
+            Office. You can explore the data by interacting with the
+            visualization.
+          </div>
+        </div>
+        <div>About</div>
+      </div>
+      <div id="chart" class="flex justify-center items-center"></div>
+      <div class="legends container mx-auto flex gap-x-24">
+        <div>
+          <h3 class="text-xl mb-10">Characters and screen presence</h3>
+          <img src="src/assets/legend1.png" alt="" />
+        </div>
+        <div>
+          <h3 class="text-xl mb-10">Awards</h3>
+          <img src="src/assets/legend2.png" alt="" />
+        </div>
+      </div>
+      <footer class="container mx-auto flex w-full gap-x-24 flex-between mt-32">
+        <div class="flex-1" id="top-episodes">
           <h2 class="text-3xl mb-10">Top Episodes</h2>
           <ul class="list-none"></ul>
         </div>
-        <div class="flex-1 pr-10" id="top-directors">
+        <div class="flex-1" id="top-directors">
           <h2 class="text-3xl mb-10">Top Directors</h2>
           <ul class="list-none"></ul>
         </div>
@@ -31,15 +53,30 @@
         </div>
       </footer>
     </section>
-    <div
-      class="absolute left-0 top-0 bg-gray-200 p-5 popup hidden"
-      id="popup"
-      class="popup"
-    >
-      <button class="close absolute right-2 top-2">X</button>
-      <h3></h3>
-      <p></p>
+    <div id="popover-1" class="popup p-5 rounded text-sm">
+      <div class="close absolute right-2 top-2"><i data-feather="x" class="fea icon-sm icons"></i></i>
+      </div>
     </div>
-    <script src="./src/index.js"></script>
+    <div id="popover-2" class="popup p-5 rounded text-sm">
+      <div class="close absolute right-2 top-2"></div>
+      <header></header>
+      <section></section>
+    </div>
+    <div id="popover-3" class="popup p-5 rounded text-sm ">
+      <div class="close absolute right-2 top-2"></div>
+      <header></header>
+      <section></section>
+    </div>
+    <div id="popover-4" class="popup p-5 rounded text-sm ">
+      <div class="close absolute right-2 top-2"></div>
+      <header class="font-bold border-bottom-1"></header>
+      <section></section>
+    </div>
+    
+    
+    <script type="module" src="./src/index.js"></script>
+    <script>
+      feather.replace()
+    </script>
   </body>
 </html>

@@ -9,6 +9,12 @@ import {
 import { parseTime } from "./utils/parsers";
 import radialAxis, { axisRadialInner, axisRadialOuter } from "d3-radial-axis";
 import { createShapeYScales } from "./scales";
+import Popover from "./popover";
+import { highlightRadialBar, unHighlightRadialBar } from "./radialbars";
+import {
+  highlighteCharacterLine,
+  unHighlighteCharacterLine,
+} from "./legends/vertical";
 
 class CharacterLine {
   constructor(chartEl, data, options) {
@@ -20,9 +26,9 @@ class CharacterLine {
     this.data = data;
     this.scaleX;
     this.scaleY;
-    this.popup = document.querySelector("#popup");
+    this.episodePopover = new Popover(2);
 
-    this._logme = this._logme.bind(this);
+    this._eventListeners = this._eventListeners.bind(this);
     this._createScales = this._createScales.bind(this);
     this._drawLine = this._drawLine.bind(this);
     this._drawShapes = this._drawShapes.bind(this);
@@ -40,11 +46,14 @@ class CharacterLine {
     for (let i = 0; i < metalength; i++) {
       const found = this.data.find((d) => d.key == i + 1);
       if (found) {
+        found.value.episode = "Episode1";
         newData.push(found);
       } else {
         newData.push({
           key: i + 1,
-          value: null,
+          value: {
+            lines: null,
+          },
         });
       }
     }
@@ -64,11 +73,11 @@ class CharacterLine {
       // })
     );
 
-    this.scaleY = d3.scaleRadial().range([innerRadius, outerRadius]);
+    this.scaleY = d3.scaleRadial().range([outerRadius, innerRadius]);
 
     this.scaleY.domain(
       d3.extent(this.data, function (d) {
-        return parseInt(d.value);
+        return parseInt(d.value.lines);
       })
     );
   }
@@ -94,7 +103,7 @@ class CharacterLine {
     let crcls = characterCirclesG
       .append("circle")
       .attr("fill", (d) => {
-        return parseInt(d.value) > 0 ? this.color : "#666";
+        return parseInt(d.value.lines) > 0 ? this.color : "#666";
       })
       .attr("class", "shape")
       // .attr("cx", (d) => {
@@ -118,23 +127,53 @@ class CharacterLine {
         return h;
       })
       .attr("r", (d) => {
-        return this.shapeScaleY(parseInt(d.value || 0.5));
+        return this.shapeScaleY(parseInt(d.value.lines || 0.5));
       });
-    crcls.call(this._logme);
-    //.call(this._logme);
+    crcls.call(this._eventListeners);
 
-    crcls.selectAll("circle").on("mouseover", this._logme);
+    //crcls.selectAll("circle").on("mouseover", this._eventListeners);
   }
 
-  _logme(d) {
+  _eventListeners(d) {
+    d.on("click", (e, d, i) => {
+      e.stopPropagation();
+
+      this.episodePopover.move(e);
+      this.episodePopover.show(
+        `<div class="border-b border-gray-500 pb-2 "><h4  class="font-bold mb-2">Screen time of  ${d.value.speaker}</h4></div>`,
+        `<p class="py-2">${d.value.lines / 2}%</p>`
+      );
+      console.log(d);
+      highlightRadialBar(d.key);
+    });
     d.on("mouseover", (e, d, i) => {
-      this.popup.querySelector("h3").innerText = d.value;
-      //console.log(d.data());
+      this.episodePopover.move(e);
+      this.episodePopover.show(
+        `<div class="border-b border-gray-500 pb-2 "><h4  class="font-bold mb-2">Screen time of  ${d.value.speaker}</h4></div>`,
+        `<p class="py-2">${d.value.lines / 2}%</p>`
+      );
+      highlightRadialBar(d.key);
+      highlighteCharacterLine(d.value.speaker.toLowerCase());
+      console.log(d);
+      document
+        .querySelector(
+          "#character-vertical-label-" + d.value.speaker.toLowerCase()
+        )
+        .classList.add("highlighted");
+    });
+    d.on("mouseout", (e, d, i) => {
+      this.episodePopover.hide();
+      unHighlightRadialBar();
+      unHighlighteCharacterLine();
+      document
+        .querySelector("[id^=character-vertical-label-].highlighted")
+        .classList.remove("highlighted");
     });
   }
 
   _drawLine() {
     const linegroup = this.svg.append("g").attr("class", "char-line ");
+    console.log(this.newData);
     linegroup.attr(
       "transform",
       "translate(" +
@@ -147,7 +186,7 @@ class CharacterLine {
     const line = d3
       .lineRadial()
       .defined(function (d) {
-        return d.value !== null;
+        return d.value.lines !== null;
       })
 
       .angle((d) => {
@@ -165,6 +204,8 @@ class CharacterLine {
       .datum(this.newData)
       .attr("fill", "none")
       .attr("stroke", this.color)
+      .attr("stroke-width", 5)
+      .attr("stroke-linecap", "round")
       .attr("class", this.classes)
       .attr("d", line);
 

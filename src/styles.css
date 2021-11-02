@@ -2,11 +2,13 @@
 :root {
   --bodybg: #010101;
   --titlesBar: #111;
-  --awardCircleFill: #ab4165;
+  --titlesBarHover: #e10af5;
+  --awardCircleFill: #4891bb;
   --officefont: itc-american-typewriter, serif;
   --seasoncolor: #adab19;
   --gray1: #dadada;
   --bodyText: #bdbdbd;
+  --viewershipChartColor: #d6f879;
 }
 body {
   padding: 0;
@@ -37,7 +39,7 @@ body {
   stroke-width: 2;
 }
 .median-rating-line path {
-  stroke: rgb(211, 15, 162);
+  stroke: #a3037b;
   stroke-width: 1;
 }
 
@@ -48,6 +50,7 @@ body {
   stroke-linecap: round;
   fill: none;
 }
+
 .screentime-connector {
   stroke: #535353;
   stroke-width: 2;
@@ -73,6 +76,12 @@ body {
 }
 .titlelabel:hover {
   opacity: 1;
+  fill: var(--titlesBarHover);
+  cursor: crosshair;
+}
+[id^="titlelabel"].highlighted {
+  opacity: 1;
+  fill: var(--titlesBarHover);
 }
 
 h1,
@@ -82,6 +91,7 @@ h3 {
   font-weight: 500;
   font-style: normal;
   color: #eaeaea;
+  letter-spacing: 2px;
 }
 
 .ratinglabel {
@@ -95,6 +105,9 @@ h3 {
 
 .shape {
   opacity: 0.8;
+}
+.shape:hover {
+  cursor: pointer;
 }
 .vertical-legend-line {
   stroke: rgb(211, 15, 162);
@@ -119,15 +132,13 @@ circle.award.nom {
 circle.award.won {
   fill-opacity: 0.6;
 }
+circle.award:hover {
+  cursor: pointer;
+}
 g#downarrow svg {
   stroke: var(--seasoncolor);
   width: 12;
   height: 12;
-}
-
-.popup {
-  width: 300px;
-  /* pointer-events: none; */
 }
 
 .wedge {
@@ -190,4 +201,59 @@ image {
 .ratingaxis-tick {
   font-size: 12px;
   fill: var(--seasoncolor);
+}
+
+/* //Popup styles */
+.popup {
+  width: 300px;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  background-color: var(--titlesBar);
+  /* border: 2px solid #b1b1b1; */
+  transition: opacity 0.3s ease-out;
+  box-shadow: 0 10px 15px -3px rgba(161, 161, 161, 0.664),
+    0 4px 6px -2px rgba(180, 180, 180, 0.609);
+}
+.popup.show {
+  opacity: 1;
+  transition: opacity 0.3s ease-out;
+}
+.popup h3 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.viewershipAreaChart {
+  fill: var(--viewershipChartColor);
+  fill-opacity: 0.2;
+}
+[id^="axisline"].highlighted {
+  stroke: var(--titlesBarHover);
+  stroke-opacity: 1;
+}
+[id^="barchart"].highlighted {
+  stroke: var(--titlesBarHover);
+}
+[id^="rating"].highlighted {
+  opacity: 1;
+}
+[id^="character-vertical-label-"].highlighted {
+  fill: var(--titlesBarHover);
+}
+
+.characterFullCircle {
+  stroke: var(--titlesBarHover);
+  stroke-width: 15;
+  fill: none;
+  opacity: 0;
+  pointer-events: none;
+}
+.characterFullCircle.highlighted {
+  stroke: var(--titlesBarHover);
+  stroke-width: 15;
+  fill: none;
+  opacity: 0.1;
 }

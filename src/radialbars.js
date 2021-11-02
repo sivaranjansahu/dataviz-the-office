@@ -8,6 +8,27 @@ import {
 } from "./utils/dimensions";
 import { parseTime } from "./utils/parsers";
 import { createXScales, createYScales } from "./scales";
+import Popover from "./popover";
+
+export function highlightRadialBar(absEpisode) {
+  document
+    .querySelectorAll(
+      `#axisline-${absEpisode},#barchart-${absEpisode},#rating-${absEpisode},#titlelabel-${absEpisode} `
+    )
+    .forEach((el) => {
+      el.classList.add("highlighted");
+    });
+}
+
+export function unHighlightRadialBar(absEpisode) {
+  document
+    .querySelectorAll(
+      `[id^="axisline"],[id^="barchart"],[id^="rating"],[id^="titlelabel"] `
+    )
+    .forEach((el) => {
+      el.classList.remove("highlighted");
+    });
+}
 
 class RadialBars {
   constructor(chartEl, data, options) {
@@ -18,17 +39,14 @@ class RadialBars {
     this.data = data;
     this.popup = document.querySelector("#popup");
     this._showPopup = this._showPopup.bind(this);
+    this._hidePopup = this._hidePopup.bind(this);
     this._createRatingTicks = this._createRatingTicks.bind(this);
     this._handleMouseOver = this._handleMouseOver.bind(this);
     this._handleMouseOut = this._handleMouseOut.bind(this);
     // this._createGradient();
-    this._drawChart = this._drawChart.bind(this);
+    this.episodePopover = new Popover(4);
 
-    document.querySelector("#popup .close").addEventListener("click", () => {
-      !this.popup.classList.contains("hidden")
-        ? this.popup.classList.add("hidden")
-        : null;
-    });
+    this._drawChart = this._drawChart.bind(this);
 
     this.color1 = d3
       .scaleLinear()
@@ -131,6 +149,9 @@ class RadialBars {
       .enter()
       .append("g")
       .attr("class", "titlelabel")
+      .attr("id", (d) => {
+        return "titlelabel-" + d.absEpisode;
+      })
       .attr("text-anchor", function (d) {
         return (that.scaleX(d.absEpisode) + Math.PI) % (2 * Math.PI) < Math.PI
           ? "end"
@@ -202,24 +223,7 @@ class RadialBars {
     titlesGroup
       .selectAll(".titlelabel text")
       .on("mouseover", this._handleMouseOver)
-      .on("mouseout", this._handleMouseOut)
-      .on("click", this._showPopup);
-  }
-
-  _showPopup(e, d) {
-    if (!this.popup.classList.contains("hidden")) {
-      this.popup.classList.add("hidden");
-    } else {
-      this.popup.classList.remove("hidden");
-      this.popup.querySelector("h3").innerText =
-        "S:" + d.Season + "E:" + d.absEpisode;
-      this.popup.querySelector("p").innerText = d.About;
-      console.log(e.screenX, e.screenY);
-      this.popup.style.left =
-        e.screenX > window.innerWidth / 2 ? e.pageX - 300 : e.pageX;
-      this.popup.style.top =
-        e.screenY > window.innerHeight / 2 ? e.screenY - 200 : e.screenY;
-    }
+      .on("mouseout", this._handleMouseOut);
   }
 
   _createRatingTicks() {
@@ -258,32 +262,42 @@ class RadialBars {
       });
   }
 
+  _showPopup(e, d) {
+    e.stopPropagation();
+    this.episodePopover.updateContent(
+      "S" + d.Season + " E" + d.absEpisode,
+      d.About
+    );
+    this.episodePopover.show(
+      "S" + d.Season + " E - " + d.EpisodeTitle,
+      "Aired on : " + d.Date + "<br>" + d.About
+    );
+    const x = e.screenX > window.innerWidth / 2 ? e.pageX - 300 : e.pageX;
+    this.episodePopover.move(e);
+  }
+  _hidePopup(e, d) {
+    this.episodePopover.hide();
+    unHighlightRadialBar(d.absEpisode);
+    this.episodePopover.updateContent("", "");
+    this.episodePopover.move(e);
+  }
+
   _handleMouseOver(e, d) {
-    document.querySelector("#axisline-" + d.absEpisode).style.stroke = "red";
-    document.querySelector("#axisline-" + d.absEpisode).style[
-      "stroke-opacity"
-    ] = 1;
-    document.querySelector("#barchart-" + d.absEpisode).style.stroke = "red";
-    document.querySelector("#rating-" + d.absEpisode).style["opacity"] = 1;
-    //this._setPopup(e, d);
+    //console.log(d);
+    this._showPopup(e, d);
+    highlightRadialBar(d.absEpisode);
   }
   _setPopup(e, d) {
     this.popup.querySelector("h3").innerText =
-      "S:" + d.Season + "E:" + d.absEpisode;
+      "S:" + d.Season + "E:" + d.absEpisode + d.EpisodeTitle;
     this.popup.querySelector("p").innerText = d.About;
     this.popup.style.left = e.pageX;
     this.popup.style.top = e.pageY;
   }
 
   _handleMouseOut(e, d) {
-    document.querySelector("#axisline-" + d.absEpisode).style.stroke =
-      "#535353";
-    document.querySelector("#axisline-" + d.absEpisode).style[
-      "stroke-opacity"
-    ] = 0.5;
-    document.querySelector("#barchart-" + d.absEpisode).style.stroke =
-      "#aaaaaa";
-    document.querySelector("#rating-" + d.absEpisode).style["opacity"] = 0;
+    unHighlightRadialBar(d.absEpisode);
+    this._hidePopup(e, d);
   }
 }
 
