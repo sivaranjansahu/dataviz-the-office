@@ -1,7 +1,8 @@
 export const margins = { top: 20, right: 10, bottom: 20, left: 10 };
+const w = Math.min(1960, window.innerWidth);
 export const dimensions = {
-  width: 1960,
-  height: 1960,
+  width: w,
+  height: w,
   endAngle: 1.913 * Math.PI,
 };
 
@@ -13,7 +14,7 @@ export const chartDimensions = {
 export const r = dimensions.width * 0.000510204; // = 1/1960 - to make chart responsive
 export const radii = {
   viewershipStart: r * 50,
-  viewershipEnd: r * 250,
+  viewershipEnd: r * 200,
   characterTimelineStart: r * 200,
   characterTimelineEnd: r * 600,
   awrdsBarStart: r * 660,

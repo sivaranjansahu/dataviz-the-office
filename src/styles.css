@@ -225,6 +225,11 @@ image {
   font-weight: 600;
   margin-bottom: 1rem;
 }
+.popup.center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .viewershipAreaChart {
   fill: var(--viewershipChartColor);

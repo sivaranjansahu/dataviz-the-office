@@ -15,5 +15,9 @@
   },
   "browserslist": [
     "since 2017-06"
-  ]
+  ],
+  "devDependencies": {
+    "cssnano": "^5.0.9",
+    "postcss": "^8.2.15"
+  }
 }

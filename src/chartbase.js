@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import VerticalLegend from "./legends/vertical";
+import Popover from "./popover";
 import { createXScales, createYScales } from "./scales";
 import {
   chartDimensions,
@@ -14,7 +15,7 @@ class Chartbase {
     this.chartSvg;
     //metaData.push({ absEpisode: "189" });
     this.data = metaData;
-    console.log(this.data);
+
     this._createRayLines = this._createRayLines.bind(this);
     this.scaleX = createXScales([0, metalength + 1]);
     this.scaleY = createYScales([6, 10]);
@@ -27,6 +28,15 @@ class Chartbase {
     this._buildArcTitleBg();
     this._createFilters();
     this._awardCircle();
+
+    const devicePopover = new Popover(5);
+    console.log("dimenstions", dimensions);
+    if (dimensions.width < 1000) {
+      devicePopover.show(
+        "Small screen detected",
+        "This visualization experience is optimized only for large screens. Please open it in a desktop or laptop to enjoy exploring the data."
+      );
+    }
 
     return this.chartSvg;
   }

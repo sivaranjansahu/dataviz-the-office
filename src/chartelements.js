@@ -36,6 +36,7 @@ class ChartElements {
       .interpolator(d3.interpolateCool);
     const rad1 = new RadialLine(this.svg, this.data, { classes: "first-line" });
     const awardsEl = new Awards(this.svg, this.awardsData);
+    const viewershipArea = new Viewership(this.svg, this.data, {});
     const charList = this.characterData.map((d) => d.key);
     const charToShow = 20;
     const offsetUnit =
@@ -61,7 +62,7 @@ class ChartElements {
     // );
 
     const radialBars = new RadialBars(this.svg, this.data, {});
-    const viewershipArea = new Viewership(this.svg, this.data, {});
+
     const footerData = new Footer(this.svg, this.data);
     // const medianRatingsLine = new MedianRating(this.svg, this.data, {
     //   classes: "median-rating",

@@ -201,43 +201,41 @@ class VerticalLegends {
       "Jo",
       "Deangelo",
     ];
+    // const gap =
+    //   (radii.characterTimelineEnd - radii.characterTimelineStart) / 20;
+    const gap =
+      (radii.characterTimelineEnd * 1.1 - radii.characterTimelineStart) / 20;
+    console.log("gap", gap);
     let chTitles = l.append("g").attr("class", "character-titles-group");
     for (let i = 0; i < 20; i++) {
       chTitles
         .append("path")
         .datum(d3.range(50))
         .attr("class", "testarc")
-        .attr("d", line.radius(radii.characterTimelineEnd - 30 - i * 23));
+        .attr("d", line.radius(radii.characterTimelineEnd - 30 - i * gap));
 
       chTitles
         .append("path")
         .datum(d3.range(50))
         .attr("class", "characterFullCircle")
         .attr("id", "characterFullCircle" + chars[i].toLowerCase())
-        .attr("d", fullCircle.radius(radii.characterTimelineEnd - 30 - i * 23));
+        .attr(
+          "d",
+          fullCircle.radius(radii.characterTimelineEnd - 30 - i * gap)
+        );
 
-      if (false) {
-        l.append("svg:image")
-          .attr("x", -10)
-          .attr("y", -(radii.characterTimelineEnd - 10 - i * 20))
-          .attr("width", 30)
-          .attr("height", 30)
-          .attr("class", "avatar")
-          .attr("xlink:href", require("../assets/michael.jpg"));
-      } else {
-        l.append("text")
-          .text(chars[i])
-          .attr("x", 0)
-          .attr("y", -(radii.characterTimelineEnd - 33 - i * 23))
-          .attr("class", "character-vertical-label")
-          .attr("id", "character-vertical-label-" + chars[i].toLowerCase())
-          .on("mouseover", (d) => {
-            highlighteCharacterLine(chars[i].toLowerCase());
-          })
-          .on("mouseout", (d) => {
-            unHighlighteCharacterLine();
-          });
-      }
+      l.append("text")
+        .text(chars[i])
+        .attr("x", 0)
+        .attr("y", -(radii.characterTimelineEnd - 33 - i * gap))
+        .attr("class", "character-vertical-label")
+        .attr("id", "character-vertical-label-" + chars[i].toLowerCase())
+        .on("mouseover", (d) => {
+          highlighteCharacterLine(chars[i].toLowerCase());
+        })
+        .on("mouseout", (d) => {
+          unHighlighteCharacterLine();
+        });
 
       // l.selectAll("image").on("mouseover", (e, d) => {
       //   this.attr("transform", "scale(2");
