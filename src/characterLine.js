@@ -17,7 +17,7 @@ import {
 } from "./legends/vertical";
 
 class CharacterLine {
-  constructor(chartEl, data, options) {
+  constructor(chartEl, data, episodeData, options) {
     this.classes = options.classes || "";
     this.offset = options.offset || 0;
     this.color = options.color || "red";
@@ -27,7 +27,7 @@ class CharacterLine {
     this.scaleX;
     this.scaleY;
     this.episodePopover = new Popover(2);
-
+    this.episodeData = episodeData;
     this._eventListeners = this._eventListeners.bind(this);
     this._createScales = this._createScales.bind(this);
     this._drawLine = this._drawLine.bind(this);
@@ -38,6 +38,7 @@ class CharacterLine {
     this._createScales(this.offset);
     this._drawShapes();
     //this._drawLine();
+    console.log(this.episodeData);
     return this.linegroup;
   }
 
@@ -135,18 +136,18 @@ class CharacterLine {
   }
 
   _eventListeners(d) {
-    d.on("click", (e, d, i) => {
-      e.stopPropagation();
-
-      this.episodePopover.move(e);
-      this.episodePopover.show(
-        `<div class="border-b border-gray-500 pb-2 "><h4  class="font-bold mb-2">Screen time of  ${d.value.speaker}</h4></div>`,
-        `<p class="py-2">${d.value.lines / 2}%</p>`
-      );
-      console.log(d);
-      highlightRadialBar(d.key);
-    });
     d.on("mouseover", (e, d, i) => {
+      console.log(this.episodeData, d.key);
+      setTimeout(() => {
+        const thisEpisode = this.episodeData.find(
+          (d) => parseInt(d.absEpisode) == d.key
+        );
+        console.log(thisEpisode);
+      }, 0);
+
+      // console.log(
+      //   this.data.episodeData.find((d) => parseInt(d.absEpisode) == 8)
+      // );
       this.episodePopover.move(e);
       this.episodePopover.show(
         `<div class="border-b border-gray-500 pb-2 "><h4  class="font-bold mb-2">Screen time of  ${d.value.speaker}</h4></div>`,
@@ -154,7 +155,7 @@ class CharacterLine {
       );
       highlightRadialBar(d.key);
       highlighteCharacterLine(d.value.speaker.toLowerCase());
-      console.log(d);
+
       document
         .querySelector(
           "#character-vertical-label-" + d.value.speaker.toLowerCase()

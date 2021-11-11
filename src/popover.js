@@ -53,19 +53,23 @@ export default class Popover {
 
   move(e) {
     const { pageX, pageY, screenX } = e;
-    const x = e.screenX > window.innerWidth / 2 ? pageX - 300 : pageX;
-    this.el.style.left = x;
-    this.el.style.top = pageY;
+    console.log(pageX, pageY);
+    const x = screenX > window.innerWidth / 2 ? pageX - 300 : pageX;
+    this.el.style.left = x + "px";
+    this.el.style.top = pageY + "px";
   }
 
   show(title, content) {
     this.timeout = setTimeout(() => {
       this.updateContent(title, content);
-      this.el.classList.add("show");
+      //this.el.classList.add("show");
+      this.el.style.opacity = 1;
+      console.log(this.el.classList);
     }, 500);
   }
   hide() {
     clearTimeout(this.timeout);
-    this.el.classList.remove("show");
+    //this.el.classList.remove("show");
+    this.el.style.opacity = 0;
   }
 }

@@ -49,8 +49,12 @@ class ChartElements {
         this.characterData[i].key
       );
       data.absEpisode = this.characterData[i].key;
-      console.log("radial lines data", data);
-      new CharacterLine(this.svg, data, {
+      data.episodeData = this.data.reduce((obj, d, index) => {
+        obj[d.absEpisode] = d;
+        return obj;
+      }, {});
+      console.log("radial lines data", this.data);
+      new CharacterLine(this.svg, data, this.data, {
         classes: "",
         offset: i * offsetUnit,
         color: color1(i),

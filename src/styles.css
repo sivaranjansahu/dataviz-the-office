@@ -210,12 +210,14 @@ image {
   position: absolute;
   left: 0;
   top: 0;
-  opacity: 0;
-  background-color: var(--titlesBar);
+  opacity: 1;
+  /* background-color: var(--titlesBar); */
+  background-color: #e6e6e6;
+
   /* border: 2px solid #b1b1b1; */
   transition: opacity 0.3s ease-out;
-  box-shadow: 0 10px 15px -3px rgba(161, 161, 161, 0.664),
-    0 4px 6px -2px rgba(180, 180, 180, 0.609);
+  box-shadow: 0 10px 15px -3px rgba(68, 68, 68, 0.664),
+    0 4px 6px -2px rgba(65, 65, 65, 0.609);
 }
 .popup.show {
   opacity: 1;
