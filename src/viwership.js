@@ -9,7 +9,7 @@ import {
 import { createXScales, createViewershipYScales } from "./scales";
 class ViewershipAreaChart {
   constructor(chartEl, data, mikeData, options) {
-    this.scaleX = createXScales([0, metalength]);
+    this.scaleX = createXScales([0, metalength + 1]);
     this.scaleY = createViewershipYScales([0, 25]);
     this.spkrScaleY = createViewershipYScales([0, 25]);
     this.mikeData = mikeData;
@@ -48,8 +48,8 @@ class ViewershipAreaChart {
 
     this.viewershipAreaGroup
       .append("path")
-      .attr("fill", "lightsteelblue")
-      .attr("fill-opacity", 0.2)
+      .attr("class", "viewershipAreaChart")
+      //.attr("fill-opacity", 0.2)
       .attr(
         "d",
         areaGen

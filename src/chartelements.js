@@ -1,22 +1,29 @@
 import * as d3 from "d3";
-import { chartDimensions, margins, dimensions } from "./utils/dimensions";
+import {
+  chartDimensions,
+  margins,
+  dimensions,
+  radii,
+} from "./utils/dimensions";
 import { nest } from "d3-collection";
 import RadialLine from "./radialline";
 import CharacterLine from "./characterLine";
 import RadialBars from "./radialbars";
 import Viewership from "./viwership";
 import MedianRating from "./medianrating";
+import Footer from "./footer";
+import Awards from "./awards";
+import Popover from "./popover";
 
 class ChartElements {
-  constructor(chartEl, metaData, characterData) {
+  constructor(chartEl, metaData, characterData, awardsData) {
     this.svg = chartEl;
     this.data = metaData;
+    this.awardsData = awardsData;
     this.characterData = characterData;
     this._drawCircles = this._drawCircles.bind(this);
     //this._drawCircles();
     //this._drawRadialLine();
-
-    console.log(this._seasonMedianRating(this.data));
 
     this._rad();
   }
@@ -25,20 +32,33 @@ class ChartElements {
     var color1 = d3
       .scaleSequential()
       .domain([0, 20])
-      .interpolator(d3.interpolateRdYlGn);
-    // .range(["#d73027", "#1a9850"])
-    // .interpolate(d3.interpolateHcl);
-
-    console.log(d3.interpolateRdGy(0.3));
+      //.interpolator(d3.interpolateRdYlGn);
+      .interpolator(d3.interpolateCool);
     const rad1 = new RadialLine(this.svg, this.data, { classes: "first-line" });
-    for (let i = 0; i < 20; i++) {
+    const awardsEl = new Awards(this.svg, this.awardsData);
+    const viewershipArea = new Viewership(this.svg, this.data, {});
+    const charList = this.characterData.map((d) => d.key);
+    const charToShow = 20;
+    const offsetUnit =
+      (radii.characterTimelineEnd * 1.1 - radii.characterTimelineStart) /
+      charToShow;
+    console.log(this.characterData);
+    for (let i = 0; i < charToShow; i++) {
       const data = this._characterTotalLinesByEpisode(
-        this.characterData[i].values
+        this.characterData[i].values,
+        this.characterData[i].key
       );
-      new CharacterLine(this.svg, data, {
+      data.absEpisode = this.characterData[i].key;
+      data.episodeData = this.data.reduce((obj, d, index) => {
+        obj[d.absEpisode] = d;
+        return obj;
+      }, {});
+      console.log("radial lines data", this.data);
+      new CharacterLine(this.svg, data, this.data, {
         classes: "",
-        offset: i * 15,
+        offset: i * offsetUnit,
         color: color1(i),
+        character: "Michael",
       });
     }
     // const mikeData = this._characterTotalLinesByEpisode(
@@ -46,10 +66,11 @@ class ChartElements {
     // );
 
     const radialBars = new RadialBars(this.svg, this.data, {});
-    const viewershipArea = new Viewership(this.svg, this.data, {});
-    const medianRatingsLine = new MedianRating(this.svg, this.data, {
-      classes: "median-rating",
-    });
+
+    const footerData = new Footer(this.svg, this.data);
+    // const medianRatingsLine = new MedianRating(this.svg, this.data, {
+    //   classes: "median-rating",
+    // });
   }
   _createXscale() {}
 
@@ -125,14 +146,17 @@ class ChartElements {
       .attr("d", line);
   };
 
-  _characterTotalLinesByEpisode(speakerData) {
+  _characterTotalLinesByEpisode(speakerData, spkr) {
     return nest()
       .key(function (d) {
         return d.episode;
       })
 
       .rollup(function (leaves) {
-        return leaves.length;
+        return {
+          lines: leaves.length,
+          speaker: spkr,
+        };
       })
       .entries(speakerData);
   }
